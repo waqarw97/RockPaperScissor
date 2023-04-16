@@ -31,33 +31,70 @@ function playRound(playerSelection, computerSelection) {
     }
 };
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-  
-    for (let i = 0; i < 5; i++) {
-      const playerSelection = prompt("Choose Rock, Paper, or Scissors:");
-      const computerSelection = getComputerChoice();
-      const result = playRound(playerSelection, computerSelection);
-  
-      if (result.startsWith("You Win")) {
-        playerScore++;
-      } else if (result.startsWith("You Lose")) {
-        computerScore++;
-      }
-  
-      console.log(`Round ${i + 1}: ${result}`);
-      console.log(`Player Score: ${playerScore} | Computer Score: ${computerScore}`);
-    }
-  
-    if (playerScore > computerScore) {
-      console.log("Congratulations! You won the game!");
-    } else if (playerScore < computerScore) {
-      console.log("You lost the game. Better luck next time!");
-    } else {
-      console.log("The game is a draw!");
-    }
+
+const rockBtn = document.getElementById('rockBtn');
+const paperBtn = document.getElementById('paperBtn');
+const scissorsBtn = document.getElementById('scissorsBtn');
+const resultsDiv = document.getElementById('results');
+const scoreDiv = document.getElementById('score');
+
+let playerScore = 0;
+let computerScore = 0;
+
+function displayResults(text) {
+  const p = document.createElement('p');
+  p.textContent = text;
+  resultsDiv.appendChild(p);
 }
 
-console.log(game());
+function updateScore() {
+  scoreDiv.textContent = `Player Score: ${playerScore} | Computer Score: ${computerScore}`;
+}
+
+function checkForWinner() {
+  if (playerScore === 5) {
+    displayResults("Congratulations! You won the game!");
+    return true;
+  } else if (computerScore === 5) {
+    displayResults("You lost the game. Better luck next time!");
+    return true;
+  }
+  return false;
+}
+
+function play(playerSelection) {
+  const computerSelection = getComputerChoice();
+  const result = playRound(playerSelection, computerSelection);
+  displayResults(result);
+
+  if (result.startsWith("You Win")) {
+    playerScore++;
+  } else if (result.startsWith("You Lose")) {
+    computerScore++;
+  }
+
+  updateScore();
+
+  if (checkForWinner()) {
+    // Disable buttons after a winner is determined
+    rockBtn.disabled = true;
+    paperBtn.disabled = true;
+    scissorsBtn.disabled = true;
+  }
+}
+
+rockBtn.addEventListener('click', () => {
+  play('rock');
+});
+
+paperBtn.addEventListener('click', () => {
+  play('paper');
+});
+
+scissorsBtn.addEventListener('click', () => {
+  play('scissors');
+});
+
+updateScore(); // Display the initial score
+
   
